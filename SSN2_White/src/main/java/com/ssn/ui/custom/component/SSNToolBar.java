@@ -27,22 +27,25 @@ import javax.swing.UIManager;
  * @author vkvarma
  */
 public class SSNToolBar extends JToolBar {
-
-
-	   
-
-
+    
     private static final long                 serialVersionUID    = 1L;
-    private ArrayList<JToolBar> ssnToolBarList = null;
-    private Insets ssnToolBarBtnMargin = null;
-    private SSNLoginForm loginForm = null;
-    private SSNHomeForm homeForm = null;
-    private SSNHomeController homeController = null;
-    private SSNHomeModel homeModel = null;
-    private SSNIconTextField searchMediaTextField = null;
-    private ButtonGroup searchOptionButtonGroup = null;
-    public static JLabel desktopHomeLabel = null;
-    public static JLabel hiveLabel = null;
+    private              ArrayList<JToolBar>  ssnToolBarList      = null;
+    private              Insets               ssnToolBarBtnMargin = null;    
+    private              SSNLoginForm         loginForm           = null;
+    private              SSNHomeForm          homeForm            = null;
+    private              SSNHomeController    homeController      = null;
+    private              SSNHomeModel         homeModel           = null;
+    private              SSNIconTextField     searchMediaTextField    = null;
+    private              ButtonGroup          searchOptionButtonGroup = null;
+    JMenuBar profileMenu = null;
+
+    public JMenuBar getProfileMenu() {
+        return profileMenu;
+    }
+
+    public void setProfileMenu(JMenuBar profileMenu) {
+        this.profileMenu = profileMenu;
+    }
     private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(SSNToolBar.class);
     public SSNToolBar() {
         
@@ -99,19 +102,8 @@ public class SSNToolBar extends JToolBar {
                     toolBarItem.setFont(new Font("open sans",Font.PLAIN,9));
                     toolBarItem.setToolTipText(toolTip);   
                    
-                    UIManager.put("ToolTip.font", new Font("open sans", Font.PLAIN, 11));
-                    
-                    if (title.contains("DESKTOP MEDIA")) {
-                        toolBarItem.setForeground(SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
-                        desktopHomeLabel = toolBarItem;
-                    } else {
-                        toolBarItem.setForeground(SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-                    }
-                    
-                    if (title.contains("HIVE MEDIA")) {
-                        hiveLabel = toolBarItem;
-                    }
-                    
+                    UIManager.put("ToolTip.font", new Font("open sans",Font.PLAIN,11));
+                    toolBarItem.setForeground(SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
                     toolBarItem.setSize(150,32);
                     toolBarItem.addMouseListener(this.getHomeController());   
                    
@@ -132,7 +124,7 @@ public class SSNToolBar extends JToolBar {
         }
         String[] ssnMenuNames = {""/*,"Edit","View","Folder","Picture","Create","Tools"*/, ""};
         JMenuBar profileMenu = new SSNMenuBar(ssnMenuNames, this.getLoginForm(), this.getHomeForm(), this.getHomeController());
-        
+        setProfileMenu(profileMenu);
         panelRight.add(profileMenu,BorderLayout.EAST);
         panelLeft.setBackground(new Color(0,0,0,1));
         panelCenter.setBackground(new Color(0,0,0,1));

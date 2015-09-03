@@ -32,19 +32,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.crypto.Cipher;
@@ -651,82 +647,6 @@ public class SSNHelper {
         return success ? zipFile : "";
     }
 
-     /**
-     * This method will create a zip file with set of files need to be shared 
-     * @param files
-     * @return
-     */
-    public static String createZipFileFromMultipleFiles(Set<String> files,String filePath) {
-        boolean success = false;
-
-        String temp = getSsnTempDirPath();
-        String zipFile = filePath;
-        if(files.size()>1){
-            if(!zipFile.contains(".zip")){
-                zipFile=zipFile+".zip";
-            }
-            File tempDir = new File(temp);
-            if (!tempDir.exists()) {
-                tempDir.mkdir();
-            }
-
-            String[] srcFiles = files.toArray(new String[0]);
-
-            try {
-
-                // create byte buffer
-                byte[] buffer = new byte[1024];
-
-                FileOutputStream fos = new FileOutputStream(zipFile);
-
-                ZipOutputStream zos = new ZipOutputStream(fos);
-
-                for (int i = 0; i < srcFiles.length; i++) {
-
-                    File srcFile = new File(srcFiles[i]);
-
-                    FileInputStream fis = new FileInputStream(srcFile);
-
-                    // begin writing a new ZIP entry, positions the stream to the start of the entry data
-                    zos.putNextEntry(new ZipEntry(srcFile.getName()));
-
-                    int length;
-
-                    while ((length = fis.read(buffer)) > 0) {
-                        zos.write(buffer, 0, length);
-                    }
-
-                    zos.closeEntry();
-
-                    // close the InputStream
-                    fis.close();
-
-                }
-                // close the ZipOutputStream
-                zos.close();
-                success = true;
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
-        }else{
-            Iterator<String> selectedFile   =   files.iterator();
-          
-            File srcFile = new File(selectedFile.next());
-            String fileType = srcFile.getName().substring(srcFile.getName().lastIndexOf(".")+1,srcFile.getName().length());
-            zipFile = filePath.contains(".")?filePath:filePath+"."+fileType;
-            System.out.println("zipFile "+ zipFile);
-            File destinationFile = new File(zipFile);
-            try {
-                FileUtils.copyFile(srcFile , destinationFile);
-                success = true;
-            } catch (IOException ex) {
-                java.util.logging.Logger.getLogger(SSNHelper.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-        }
-
-        return success ? zipFile : "";
-    }
     /**
      * This method is to scale an image in the custom size 
      * @param image
@@ -931,30 +851,6 @@ public class SSNHelper {
         }
         return contentType;
     }
-    public static boolean isInternetReachable()
-        {
-            try {
-                //make a URL to a known source
-                URL url = new URL(SSNConstants.SSN_WEB_HOST);
-
-                //open a connection to that source
-                HttpURLConnection urlConnect = (HttpURLConnection)url.openConnection();
-
-                //trying to retrieve data from the source. If there
-                //is no connection, this line will fail
-                Object objData = urlConnect.getContent();
-
-            } catch (UnknownHostException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                return false;
-            }
-            catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                return false;
-            }
-            return true;
-        }
+    
     
 }

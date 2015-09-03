@@ -8,7 +8,6 @@ import com.ssn.listener.SSNDirSelectionListener;
 import com.ssn.listener.SSNFacebookAlbumSelectionListener;
 import com.ssn.listener.SSNInstagramSelectionListener;
 import com.ssn.ui.form.SSNHomeForm;
-import com.ssn.ws.rest.response.SSNAlbum;
 import com.ssn.ws.rest.service.SSNSubscriptionDetails;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -70,14 +69,12 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.facebook.api.Album;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.MediaOperations;
 import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 import org.springframework.social.oauth2.AccessGrant;
-import com.ssn.listener.SSNHiveAlbumSelectionListner;
 
 /**
  *
@@ -104,33 +101,27 @@ public class SSNFileExplorer extends JPanel {
     private String selectedFolder;
 
     public SSNDirSelectionListener ssnDirSelectionListener = null;
-    public SSNHiveAlbumSelectionListner ssnHiveAlbumSelectionListener = null;
     public Logger logger = Logger.getLogger(SSNFileExplorer.class);
-    public static String selectedMedia  =   "home";
-    public Map<String,SSNAlbum> hiveAlbumMap = null;
+
     public SSNFileExplorer(SSNHomeForm homeForm) {
+         ///ProgressEx.show();
         try {
 
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            logger.error(ex);
         }
         JPanel treeContainer = new JPanel(new BorderLayout());
 
-        
+        //super("Directories Tree");
         setSize(new Dimension(200, 300));
         setLayout(new BorderLayout());
         setHomeForm(homeForm);
-        
+        //DefaultMutableTreeNode top = new DefaultMutableTreeNode(new SSNIconData(new ImageIcon(getClass().getResource("/images/ssn-hive-drive.png")), null, "OurHive"));
         DefaultMutableTreeNode top = new DefaultMutableTreeNode(new SSNIconData(null, null, "OURHIVE"));
       
         DefaultMutableTreeNode node;
 
         File theDir = new File(SSNHelper.getSsnHiveDirPath());
-        if(selectedMedia.equals("hive")){
-            hiveAlbumMap = getHomeForm().getHomeModel().getHiveAlbums( getHomeForm().getHomeModel().getLoggedInUserAccessToken());
-            theDir = new File(SSNHelper.getSsnTempDirPath());
-        }
 
         ImageIcon imgIcon = new ImageIcon(getClass().getResource("/images/ssn-hive-folder.png"));
 
@@ -152,7 +143,7 @@ public class SSNFileExplorer extends JPanel {
                 }
             }
         }
-        m_model = new DefaultTreeModel(top);
+            m_model = new DefaultTreeModel(top);
 
         m_tree = new JTree(m_model);
 
@@ -164,17 +155,10 @@ public class SSNFileExplorer extends JPanel {
 
         m_tree.addTreeExpansionListener(new SSNDirExpansionListener(this));
 
-        
-        if(selectedMedia.equals("hive")){
-            ssnHiveAlbumSelectionListener = new SSNHiveAlbumSelectionListner(this.homeForm,this);
-            getHomeForm().setSsnHiveAlbumSelectionListner(ssnHiveAlbumSelectionListener);
-              m_tree.addTreeSelectionListener(ssnHiveAlbumSelectionListener);
-        }else{
-            ssnDirSelectionListener = new SSNDirSelectionListener(this, getHomeForm());
-            getHomeForm().setSsnDirSelectionListener(ssnDirSelectionListener);
-            m_tree.addTreeSelectionListener(ssnDirSelectionListener);
-        }
-      
+        ssnDirSelectionListener = new SSNDirSelectionListener(this, getHomeForm());
+        getHomeForm().setSsnDirSelectionListener(ssnDirSelectionListener);
+
+        m_tree.addTreeSelectionListener(ssnDirSelectionListener);
 
         m_tree.setShowsRootHandles(true);
 
@@ -190,7 +174,7 @@ public class SSNFileExplorer extends JPanel {
         });
         Border paddingBorder = BorderFactory.createEmptyBorder(-5, 10, 10, 10);
         Border border = BorderFactory.createLineBorder(SSNConstants.SSN_BLACK_BACKGROUND_COLOR);
-	
+//	
         File rootFile = new File(SSNHelper.getSsnHiveDirPath());
 
         double size = rootFile.list().length;
@@ -229,7 +213,7 @@ public class SSNFileExplorer extends JPanel {
 
         };
 
-        
+        //addWindowListener(wndCloser);
         this.setBackground(SSNConstants.SSN_BLACK_BACKGROUND_COLOR);
         treeContainer.setBackground(SSNConstants.SSN_BLACK_BACKGROUND_COLOR);
         
@@ -586,9 +570,4 @@ public class SSNFileExplorer extends JPanel {
         overrides.put("ProgressBar.foreground", Color.GREEN);
         return overrides;
     }
-    
-    public void hiveAlbums(String accessToken){
-        getHomeForm().getHomeModel().getHiveAlbums(accessToken);
-    }
-   
 }

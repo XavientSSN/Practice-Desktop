@@ -6,26 +6,22 @@ import com.ssn.app.loader.SSNDialogChoice;
 import com.ssn.dao.SSNDao;
 import com.ssn.helper.SSNGalleryHelper;
 import com.ssn.helper.SSNHelper;
-import com.ssn.listener.SSNHiveAlbumSelectionListner;
 import com.ssn.model.SSNHomeModel;
 import com.ssn.speech.SSNMicrophoneFrame;
 import com.ssn.speech.VoiceCommandController;
 import com.ssn.ui.custom.component.SSNConfirmationDialogBox;
-import com.ssn.ui.custom.component.SSNFileExplorer;
 import com.ssn.ui.custom.component.SSNMessageDialogBox;
 import com.ssn.ui.custom.component.SSNToolBar;
 import com.ssn.ui.form.SSNHomeForm;
 import com.ssn.ui.form.SSNLoginForm;
 import com.ssn.ui.form.SSNShareForm;
 import com.ssn.ui.form.SSNUntaggedMediaForm;
-import com.ssn.ws.rest.response.SSNAlbumMedia;
 import com.ssn.ws.rest.response.SSNLoginResponse;
 import edu.cmu.sphinx.frontend.util.Microphone;
 import edu.cmu.sphinx.recognizer.Recognizer;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.props.ConfigurationManager;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Graphics2D;
@@ -37,23 +33,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -61,7 +51,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openimaj.image.processing.face.detection.DetectedFace;
 
@@ -69,7 +58,7 @@ import org.openimaj.image.processing.face.detection.DetectedFace;
  *
  * @author vkvarma
  */
-public final class SSNHomeController extends SSNBaseController {    
+public final class SSNHomeController extends SSNBaseController {
     public static boolean   isUnTaggedOpen  =   false;
     private SSNHomeForm homeForm = null;
     private SSNLoginForm loginForm = null;
@@ -80,7 +69,6 @@ public final class SSNHomeController extends SSNBaseController {
     private Recognizer recognizer = null;
     private Microphone microphone = null;
     List<String> uniqueCommands = null;
-    public static JLabel currentLabel = null;
     private final static Logger logger = Logger.getLogger(SSNHomeController.class);
     public SSNHomeController() {
     }
@@ -97,128 +85,84 @@ public final class SSNHomeController extends SSNBaseController {
         logger.info("actionPerformed method ");
         Object actionEventObj = e.getSource();
         if (actionEventObj != null && actionEventObj instanceof JButton) {
-            
+            //JButton jBtn = (JButton) actionEventObj;
         } else if (actionEventObj != null && actionEventObj instanceof JMenuItem) {
             JMenuItem jMItem = (JMenuItem) actionEventObj;
             logger.info("actionPerformed method " + jMItem.getActionCommand());
             if (jMItem.getActionCommand().equalsIgnoreCase("logoffMenu")) {
                 this.getHomeModel().processSSNLogoff();
             } else if (jMItem.getActionCommand().equalsIgnoreCase("editUserProfileShowForm")) {
-            
+               // this.homeForm.getSearchMediaTextField().setText("");
                 this.getHomeModel().displayEditProfileForm();
             } else if (jMItem.getActionCommand().equalsIgnoreCase("changePasswordShowForm")) {
-            
+                //this.homeForm.getSearchMediaTextField().setText("");
                 this.getHomeModel().displayChangePasswordForm();
             }else if (jMItem.getActionCommand().equalsIgnoreCase("preferencesMenu")) {
-            
+               // this.homeForm.getSearchMediaTextField().setText("");
                 this.getHomeModel().displayPreferencesForm();
             }else if (jMItem.getActionCommand().equalsIgnoreCase("ALL")) {
-            
+               // this.homeForm.getSearchMediaTextField().setText("");
                 this.getHomeModel().showFilteredMedia("ALL");
             }else if (jMItem.getActionCommand().equalsIgnoreCase("IMAGES")) {
-            
+               // this.homeForm.getSearchMediaTextField().setText("");
                 this.getHomeModel().showFilteredMedia("IMAGES");
             }else if (jMItem.getActionCommand().equalsIgnoreCase("VIDEOS")) {
-            
+               // this.homeForm.getSearchMediaTextField().setText("");
                 this.getHomeModel().showFilteredMedia("VIDEOS");
             }else if (jMItem.getActionCommand().equalsIgnoreCase("voiceCommandSettingMenu")) {
-            
+               // this.homeForm.getSearchMediaTextField().setText("");
                 this.getHomeModel().displayVoiceCommandSettingForm();
             }
-            //exportPhoto
         }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        
+          //logger.info("mouseClicked method " );
         Object mouseEventObj = e.getSource();
          this.getHomeForm().setCursor(new Cursor(Cursor.WAIT_CURSOR));
             if (mouseEventObj != null && mouseEventObj instanceof JLabel) {
                 JLabel jBtn = (JLabel) mouseEventObj;
-                if (!(jBtn.getName().equalsIgnoreCase("downloadMedia")))
-                    refreshIconImageToDefault();
-                
-                currentLabel = jBtn;
-                JLabel homeLabel = SSNToolBar.desktopHomeLabel;
-               
+
+                logger.info("mouseClicked method " + jBtn.getName());
+             
                 if (jBtn.getName().equalsIgnoreCase("home")) {
                     try {
-                        SSNFileExplorer.selectedMedia = "home";
-                        homeModel.renderLeftPanel();
+                        // this.homeForm.getSearchMediaTextField().setText("");
                         getHomeForm().getSsnDirSelectionListener().valueChanged(null, true);
-                        setIconImage(jBtn,"/icon/white_icon/home.png","home",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
+
                     } catch (Exception ee) {
                         ee.printStackTrace();
                     }
-                }else if (jBtn.getName().equalsIgnoreCase("hive")) {
-                    try {
-                        if(SSNHelper.isInternetReachable()){
-                            SSNFileExplorer.selectedMedia = "hive";
-                            File deleteDir = new File(SSNHelper.getSsnTempDirPath());
-                      
-                            String[]entries = deleteDir.list();
-                            
-                            for(String s: entries){
-                                
-                                File currentFile = new File(deleteDir.getPath(),s);
-                                if(currentFile.isDirectory()){
-                                    FileUtils.deleteDirectory(currentFile);
-                                }else{
-                                    currentFile.delete();
-                                }
-                            }
-                            
-                           homeModel.renderLeftPanel();
-                           setIconImage(jBtn,"/icon/white_icon/view-hive-icon.png","hive",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
-                           setIconImage(homeLabel,"/icon/home.png","home",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-                        }else{
-                            SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
-                            dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Message", "", "No internet connection available or may be host not responding.");
-                        }
-                    } catch (Exception ee) {
-                        logger.error(ee);
-                    }
                 } else if (jBtn.getName().equalsIgnoreCase("createAlbum") || jBtn.getName().equalsIgnoreCase("createAlbum2") || jBtn.getName().equalsIgnoreCase("createAlbum3")) {
-                    if(!SSNFileExplorer.selectedMedia.equals("home")){
-                        SSNFileExplorer.selectedMedia="home";
-                         homeModel.renderLeftPanel();
-                    }
-                        setIconImage(jBtn,"/icon/white_icon/create-album-normal.png","createAlbum",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
-                        setIconImage(homeLabel,"/icon/home.png","home",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-                        this.getHomeModel().createHiveAlbum(jBtn);
-                        setIconImage(jBtn,"/icon/create-album-normal.png","createAlbum",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-                        setIconImage(homeLabel,"/icon/white_icon/home.png","home",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
-              
+                    // this.homeForm.getSearchMediaTextField().setText("");
+                    this.getHomeModel().createHiveAlbum(jBtn);
                 } else if (jBtn.getName().equalsIgnoreCase("openCamera")) {
-                    if(!SSNFileExplorer.selectedMedia.equals("home")){
-                        SSNFileExplorer.selectedMedia="home";
-                         homeModel.renderLeftPanel();
-                    }
-                        setIconImage(jBtn,"/icon/white_icon/camera-normal.png","openCamera",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
-                        setIconImage(homeLabel,"/icon/home.png","home",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-                        this.getHomeModel().openCamera(jBtn, false);
-                   
+                    // this.homeForm.getSearchMediaTextField().setText("");
+                    this.getHomeModel().openCamera(jBtn, false);
                 } else if (jBtn.getName().equalsIgnoreCase("uploadPhoto") || jBtn.getName().equalsIgnoreCase("uploadPhoto2")) {
-                    if(!SSNFileExplorer.selectedMedia.equals("home")){
-                        SSNFileExplorer.selectedMedia="home";
-                         homeModel.renderLeftPanel();
-                    }
-                        setIconImage(jBtn,"/icon/white_icon/import_media.png","uploadPhoto",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
-                        setIconImage(homeLabel,"/icon/home.png","home",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-                        this.getHomeModel().uploadImage();
-
-              
+              //  this.homeForm.getSearchMediaTextField().setText("");
+                    //this.getHomeForm().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                    this.getHomeModel().uploadImage();
+                    // this.getHomeForm().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 } else if (jBtn.getName().equalsIgnoreCase("addFiles")) {
-              
+                    // this.homeForm.getSearchMediaTextField().setText("");
                     this.getHomeModel().addMultipleFiles();
                 } else if (jBtn.getName().equalsIgnoreCase("uploadMultipleFiles")) {
+                //this.getHomeForm().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                    //this.homeForm.getSearchMediaTextField().setText("");
                     ImageIcon gifImage = new ImageIcon(getClass().getResource("/icon/main_screen_loader.gif"), "cloudAnimation");
                     this.getHomeForm().setLblProcessingImage(new JLabel(gifImage));
                     this.getHomeModel().uploadMultipleFile();
+                    // this.getHomeForm().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                     this.getHomeForm().setLblProcessingImage(new JLabel(new ImageIcon(getClass().getResource("/icon/buffer.png"))));
-              
+                    // this.getHomeForm().getLblProcessingImage().revalidate();
                 } else if (jBtn.getName().equalsIgnoreCase("deletePhoto")) {
+                    // this.homeForm.getSearchMediaTextField().setText("");
                     if (this.getHomeForm().getFileNamesToBeDeleted() != null && this.getHomeForm().getFileNamesToBeDeleted().size() > 0) {
+                  //  this.homeForm.getSearchMediaTextField().setText("");
+                        //int result = JOptionPane.showConfirmDialog(null, "Are you sure to delete!", "Exit Confirmation : ", JOptionPane.YES_NO_OPTION);
                         if (SSNHelper.lastAlbum != null && (SSNHelper.lastAlbum.equalsIgnoreCase("Instagram Media") || SSNHelper.lastAlbum.contains(SSNHelper.getFacebookPhotosDirPath()))) {
                             SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
                             dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Alert", "", "Media can not be deleted.");
@@ -227,7 +171,9 @@ public final class SSNHomeController extends SSNBaseController {
                             dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Confirmation : ", "", "Are you sure to delete the selected media?");
                             int result = dialogBox.getResult();
                             if (result == JOptionPane.YES_OPTION) {
+                                //this.getHomeForm().setCursor(new Cursor(Cursor.WAIT_CURSOR));
                                 this.getHomeModel().deletePhotos();
+                                //this.getHomeForm().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                             }
                         }
 
@@ -245,7 +191,9 @@ public final class SSNHomeController extends SSNBaseController {
                             dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Exit Confirmation : ", "", "Are you sure to delete the selected album?");
                             int result = dialogBox.getResult();
                             if (result == JOptionPane.YES_OPTION) {
+                                //this.getHomeForm().setCursor(new Cursor(Cursor.WAIT_CURSOR));
                                 this.getHomeModel().deletePhotos();
+                                //  this.getHomeForm().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                             } else if (result == JOptionPane.NO_OPTION) {
 
                             }
@@ -253,31 +201,14 @@ public final class SSNHomeController extends SSNBaseController {
 
                     }
                 } else if (jBtn.getName().equalsIgnoreCase("startSlideShow")) {
-                    if(SSNFileExplorer.selectedMedia.equals("home")){
-                        setIconImage(jBtn,"/icon/white_icon/slideshow-normal.png","startSlideShow",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
-                        setIconImage(homeLabel,"/icon/home.png","home",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-                        this.getHomeModel().openSlideshow(jBtn);
-                    }else{
-                        SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
-                        dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Alert", "", "Can not play Slideshow for Hive Media.");
-                    }
+                    this.getHomeModel().openSlideshow(jBtn);
                 } else if (jBtn.getName().equalsIgnoreCase("viewAllAlbum")) {
-                    if(!SSNFileExplorer.selectedMedia.equals("home")){
-                        SSNFileExplorer.selectedMedia="home";
-                         homeModel.renderLeftPanel();
-                    }
-                        setIconImage(jBtn,"/icon/white_icon/view-albums-normal.png","viewAllAlbum",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
-                        setIconImage(homeLabel,"/icon/home.png","home",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-                        this.getHomeForm().getHomeModel().viewAllAlbums();
-
+                    this.getHomeForm().getHomeModel().viewAllAlbums();
                 } else if (jBtn.getName().equalsIgnoreCase("allUntagged")) {
-                    setIconImage(jBtn,"/icon/white_icon/tagged-untagged-media.png","allUntagged",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
-                    setIconImage(homeLabel,"/icon/home.png","home",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
                     if (!SSNHomeController.isUnTaggedOpen) {
                         SSNHomeController.isUnTaggedOpen = true;
                         new SSNUntaggedMediaForm(this.getHomeModel());
                     }
-                    
                 } else if (jBtn.getName().equalsIgnoreCase("share")) {
                     if (this.getHomeModel().getHomeForm().getFileNamesToBeDeleted().size() >= 1) {
                         new SSNShareForm(this.getHomeModel(), this.getHomeForm().getFileNamesToBeDeleted());
@@ -288,12 +219,6 @@ public final class SSNHomeController extends SSNBaseController {
                 } else if (jBtn.getName().equalsIgnoreCase("gift")) {
                     JOptionPane.showMessageDialog(getHomeForm(), "*** Souvenir Gift  ***<br> Section Under Construction ", "!!! Section Not Available !!!", JOptionPane.ERROR_MESSAGE);
                 } else if (jBtn.getName().equalsIgnoreCase("scheduleTag")) {
-                    if(!SSNFileExplorer.selectedMedia.equals("home")){
-                        SSNFileExplorer.selectedMedia="home";
-                         homeModel.renderLeftPanel();
-                    }
-                    setIconImage(jBtn,"/icon/white_icon/schedule-active.png","scheduleTag",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
-                    setIconImage(homeLabel,"/icon/home.png","home",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
                     this.getHomeForm().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                     Map<String, String> preferences = null;
                     try {
@@ -304,12 +229,10 @@ public final class SSNHomeController extends SSNBaseController {
                     if (Integer.parseInt(preferences.get(SSNConstants.SSN_SCHEDULED)) == 1) {
                         this.getHomeModel().openTagSchedulePanel(jBtn);
                     }else{
-                        setIconImage(jBtn,"/icon/schedule-active.png","scheduleTag",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-                        setIconImage(homeLabel,"/icon/white_icon/home.png","home",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
+
                         SSNMessageDialogBox messageDialogBox = new SSNMessageDialogBox();
                         messageDialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Message", "", "Schedule A Tag is OFF.");
                     }
-                    
 
                 } else if (jBtn.getName().equalsIgnoreCase("recentlyAdded")) {
                     JOptionPane.showMessageDialog(getHomeForm(), "*** Recently Added  ***<br> Section Under Construction ", "!!! Section Not Available !!!", JOptionPane.ERROR_MESSAGE);
@@ -426,94 +349,41 @@ public final class SSNHomeController extends SSNBaseController {
                     this.getHomeForm().getFileNamesToBeDeleted().clear();
                     this.getHomeForm().getFileNamesToBeDeleted().add(this.getHomeForm().getCurrentFile().getAbsolutePath());
                     new SSNShareForm(this.getHomeModel(), this.getHomeForm().getFileNamesToBeDeleted());
-                } else if (jBtn.getName().equalsIgnoreCase("uploadMedia")) {
-                    if(!SSNFileExplorer.selectedMedia.equals("home")){
-                        SSNFileExplorer.selectedMedia="home";
-                         homeModel.renderLeftPanel();
+                } else if (jBtn.getName().equalsIgnoreCase("synchronizeMedia")) {
+                    Map<String, String> preferences = null;
+                    try {
+                        preferences = SSNDao.getPreferences();
+                    } catch (SQLException ex) {
+                        logger.error(ex);
                     }
-                        setIconImage(jBtn,"/icon/white_icon/upload-normal.png","uploadMedia",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
-                        setIconImage(homeLabel,"/icon/home.png","home",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-                        Map<String, String> preferences = null;
-                        try {
-                            preferences = SSNDao.getPreferences();
-                        } catch (SQLException ex) {
-                            logger.error(ex);
-                        }
-                        if (Integer.parseInt(preferences.get(SSNConstants.SSN_CLOUD_SYNC)) == 1) {
+                    if (Integer.parseInt(preferences.get(SSNConstants.SSN_CLOUD_SYNC)) == 1) {
 
-                            String desc = ((ImageIcon) jBtn.getIcon()).getDescription();
-                            if (desc == null || !desc.equalsIgnoreCase("cloudAnimation")) {
-                                SSNLoginResponse loginResponse = this.getHomeForm().getLoginResponse();
-                                if(!(this.getHomeModel().getHomeForm().getFileNamesToBeDeleted().size()>0)){
-                                    SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
-                                    dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Message", "", "No media selected.");
-                                    setIconImage(jBtn,"/icon/upload-normal.png","uploadMedia",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-                                    setIconImage(homeLabel,"/icon/white_icon/home.png","home",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR); 
+                        String desc = ((ImageIcon) jBtn.getIcon()).getDescription();
+                        if (desc == null || !desc.equalsIgnoreCase("cloudAnimation")) {
+                            SSNLoginResponse loginResponse = this.getHomeForm().getLoginResponse();
+
+                            if (loginResponse != null && loginResponse.getData() != null
+                                    && loginResponse.getData().getUser() != null) {
+                                try {
+                                    jBtn.removeAll();
+                                    jBtn.setIcon(null);
+                                    ImageIcon gifImage = new ImageIcon(getClass().getResource("/icon/Sync.gif"), "cloudAnimation");
+                                    jBtn.setIcon(gifImage);
+                                    jBtn.repaint();
+                                    getHomeForm().getSsnHomeToolBar().repaint();
+                                    this.getHomeModel().synchroniseWithCloud(loginResponse.getData().getUser().getAccess_token(), jBtn);
+
+                                } catch (Exception ee) {
+                                    logger.error(ee);
                                 }
-
-                                if (loginResponse != null && loginResponse.getData() != null
-                                        && loginResponse.getData().getUser() != null) {
-                                    try {
-    //                                    
-                                        this.getHomeModel().synchroniseWithCloud(loginResponse.getData().getUser().getAccess_token(), jBtn);
-
-                                    } catch (Exception ee) {
-                                        logger.error(ee);
-                                    }
-                                } else {
-
-                                    SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
-                                    dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Message", "", "Synchronization could not be done. <br>Please try later.");
-                                    refreshCenterPanel();
-                                    setIconImage(jBtn,"/icon/upload-normal.png","uploadMedia",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-                                    setIconImage(homeLabel,"/icon/white_icon/home.png","home",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
-                                }
+                            } else {
+                                SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
+                                dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Message", "", "Synchronization could not be done. <br>Please try later.");
                             }
-                        } else {
-
-                            SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
-                            dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Message", "", "Cloud Synchronization is OFF.");
-                            refreshCenterPanel();
-                            setIconImage(jBtn,"/icon/upload-normal.png","uploadMedia",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-                            setIconImage(homeLabel,"/icon/white_icon/home.png","home",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
                         }
-//                    }else{
-//                         SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
-//                         dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Message", "", "Please selectt desktop media to upload on hive.");
-//                    }
-                    
-                }else if (jBtn.getName().equalsIgnoreCase("exportPhoto")) {
-                    if(this.getHomeModel().getHomeForm().getFileNamesToBeDeleted().size()>0){
-                        String path =this.getHomeModel().exportMediaToDevice(this.getHomeModel().getHomeForm().getFileNamesToBeDeleted());
-                        
-                        if(path.equals("cancel")){
-                            
-                        }else if(path.equals("")){
-                            SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
-                            dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Message", "", "Some error occure during export.");
-                        }else{
-                            SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
-                            dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Message", "", "Media exported successfully");
-                        }
-                    }else{
+                    } else {
                         SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
-                        dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Message", "", "No media selected.");
-                    }
-                    
-                }else if (jBtn.getName().equalsIgnoreCase("downloadMedia")) {
-                    setIconImage(SSNToolBar.hiveLabel,"/icon/white_icon/view-hive-icon.png","hive",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
-                    setIconImage(homeLabel,"/icon/home.png","home",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-                    if(this.getHomeModel().getHomeForm().getFileNamesToBeDeleted().size()>0){
-                        if(SSNHelper.isInternetReachable()){
-                            logger.info("InternetReachable");
-                            this.getHomeModel().downloadHiveMediaToLibrary();
-                        }else{
-                            SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
-                            dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Message", "", "No internet connection available or may be host not responding.");
-                        }
-                    }else{
-                        SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
-                        dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Message", "", "No media selected.");
+                        dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Message", "", "Cloud Synchronization is OFF.");
                     }
                 } else if (jBtn.getName().equalsIgnoreCase("tagImage")) {
                     this.getHomeModel().tagImage();
@@ -564,7 +434,6 @@ public final class SSNHomeController extends SSNBaseController {
             
            
         }
-        
         this.getHomeForm().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
     
@@ -800,66 +669,4 @@ public final class SSNHomeController extends SSNBaseController {
 
         return null;
     }
-    
-    public void setIconImage(JLabel label,String iconName,String labelName,Color color)
-    {
-        label.removeAll();
-        label.setIcon(null);
-        ImageIcon iconImage = new ImageIcon(getClass().getResource(iconName), labelName);
-        label.setIcon(iconImage);
-        label.setForeground(color);
-        label.repaint();
-        getHomeForm().getSsnHomeToolBar().repaint();
-    }
-        
-      public void refreshIconImageToDefault() 
-      {
-          setIconImage(SSNToolBar.desktopHomeLabel,"/icon/white_icon/home.png","home",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
-          setIconImage(SSNToolBar.hiveLabel,"/icon/view-hive-icon.png","hive",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-          if(currentLabel != null)
-          {
-              if(currentLabel.getName().equals("scheduleTag"))
-            setIconImage(currentLabel,"/icon/schedule-active.png","scheduleTag",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-              else if(currentLabel.getName().equals("viewAllAlbum"))
-            setIconImage(currentLabel,"/icon/view-albums-normal.png","viewAllAlbum",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-              else if(currentLabel.getName().equals("hive"))
-            setIconImage(currentLabel,"/icon/view-hive-icon.png","hive",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-              
-          }
-      }
-      public void refreshCenterPanel()
-      {
-          String srcAlbumPath = homeForm.ssnFileExplorer.m_display.getText();
-          if (SSNHelper.lastAlbum != null) {
-              if (SSNHelper.lastAlbum.equals("View All Albums")) {
-                  srcAlbumPath = SSNHelper.getSsnHiveDirPath();
-                  homeForm.ssnFileExplorer.m_display.setText(srcAlbumPath);
-              } else if (SSNHelper.lastAlbum.equals("Instagram Media")) {
-                  srcAlbumPath = SSNHelper.getInstagramPhotosDirPath();
-                  homeForm.ssnFileExplorer.m_display.setText("instagramMedia");
-              } else if (SSNHelper.lastAlbum.equals("Tag UnTagged Media")) {
-                  srcAlbumPath = SSNHelper.getSsnHiveDirPath();
-                  homeForm.ssnFileExplorer.m_display.setText("tagUnTaggedMedia");
-              } else if (SSNHelper.lastAlbum.contains(SSNHelper.getFacebookPhotosDirPath())) {
-                  srcAlbumPath = SSNHelper.lastAlbum;
-                  homeForm.ssnFileExplorer.m_display.setText(srcAlbumPath);
-              }
-          }
-
-          SSNGalleryHelper contentPane;
-        try {
-            contentPane = new SSNGalleryHelper(srcAlbumPath, homeForm, "ALL");
-            contentPane.setBackground(SSNConstants.SSN_BLACK_BACKGROUND_COLOR);
-          homeForm.getSsnHomeCenterPanel().removeAll();
-          homeForm.getSsnHomeCenterMainPanel().removeAll();
-          homeForm.getSsnHomeCenterPanel().add(homeForm.getScrollPane(contentPane, SSNHelper.getAlbumNameFromPath(homeForm.ssnFileExplorer.m_display.getText())));
-          homeForm.getSsnHomeCenterMainPanel().add(homeForm.getSortPanel("Date", false, SSNHelper.getAlbumNameFromPath(homeForm.ssnFileExplorer.m_display.getText())), BorderLayout.NORTH);
-          homeForm.getSsnHomeCenterMainPanel().add(homeForm.getSsnHomeCenterPanel(), BorderLayout.CENTER);
-          homeForm.revalidate();
-        } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(SSNHomeController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-          
-      }
-
 }

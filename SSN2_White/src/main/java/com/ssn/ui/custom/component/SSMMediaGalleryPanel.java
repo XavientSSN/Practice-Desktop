@@ -345,7 +345,9 @@ public class SSMMediaGalleryPanel {
             String userTitleFieldData = title;            
             String userKeywordFieldData = keyword;            
             String userCommentFieldData = comments;            
-          
+          //  String userPlaceFieldData = place;            
+          //  String userAlbumFieldData = album;            
+          //  String userAttachedVidFieldData = attachedVid;            
             String userRatingsFieldData = ratings;            
             String artistFieldData = photoGrapher;
             
@@ -354,7 +356,7 @@ public class SSMMediaGalleryPanel {
             TiffImageMetadata exif = null;
             
             TiffOutputSet outputSet = new TiffOutputSet();
-         
+            
             try {
                 metadata = Sanselan.getMetadata(file);
             } catch (ImageReadException | IOException e) {

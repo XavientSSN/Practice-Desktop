@@ -9,7 +9,6 @@ import com.github.sarxos.webcam.WebcamResolution;
 import com.ssn.app.loader.SSNConstants;
 import com.ssn.app.loader.SSNDialogChoice;
 import com.ssn.dao.SSNDao;
-import com.ssn.event.controller.SSNHomeController;
 import com.ssn.helper.SSNGalleryHelper;
 import com.ssn.helper.SSNHelper;
 import com.ssn.listener.SSNDirSelectionListener;
@@ -17,7 +16,6 @@ import com.ssn.schedule.SSNScheduleListForm;
 import com.ssn.ui.custom.component.SSMMediaGalleryPanel;
 import com.ssn.ui.custom.component.SSNGalleryMetaData;
 import com.ssn.ui.custom.component.SSNMessageDialogBox;
-import com.ssn.ui.custom.component.SSNToolBar;
 import com.ssn.ui.form.SSNHomeForm;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -120,8 +118,6 @@ public class SSNWebcamPanel extends JFrame implements Runnable, WebcamListener, 
         if (getWebcam() == null) {
             SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
 		dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(),"Error","","!!! No WebCam found !!!");
-                homeForm.getHomeController().setIconImage(webcamTollbarLbl,"/icon/camera-normal.png","openCamera",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-                homeForm.getHomeController().setIconImage(SSNToolBar.desktopHomeLabel,"/icon/white_icon/home.png","home",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
         }
         else { 
             if(getWebcam() != null && getWebcam().isOpen()) {    
@@ -260,9 +256,6 @@ public class SSNWebcamPanel extends JFrame implements Runnable, WebcamListener, 
     public void windowClosing(WindowEvent e) {
         logger.debug("windowClosing");
         getWebcam().close();
-        
-        homeForm.getHomeController().setIconImage(SSNHomeController.currentLabel,"/icon/camera-normal.png","openCamera",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-        homeForm.getHomeController().setIconImage(SSNToolBar.desktopHomeLabel,"/icon/white_icon/home.png","home",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
         //getTmpImageDir().delete();
         SSNScheduleListForm sSNScheduleListForm = null;
         String destinationFolder = "";

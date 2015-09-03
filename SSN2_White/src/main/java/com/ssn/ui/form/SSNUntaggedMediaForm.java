@@ -11,7 +11,6 @@ import com.ssn.event.controller.SSNHomeController;
 import com.ssn.event.controller.SSNUntaggedMediaController;
 import com.ssn.model.SSNHomeModel;
 import com.ssn.ui.custom.component.SSNImagePanel;
-import com.ssn.ui.custom.component.SSNToolBar;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -44,15 +43,13 @@ public class SSNUntaggedMediaForm  extends JFrame{
         
     }
     
-    public SSNUntaggedMediaForm(final SSNHomeModel homeModel) {
+    public SSNUntaggedMediaForm(SSNHomeModel homeModel) {
         
         ssnUntaggedMediaController = new SSNUntaggedMediaController(this, homeModel);
         this.addWindowListener( new WindowAdapter() {
                 public void windowClosing(WindowEvent we) {
-                SSNHomeController.isUnTaggedOpen = false;
+                        SSNHomeController.isUnTaggedOpen = false;
                         
-                homeModel.getHomeForm().getHomeController().setIconImage(SSNHomeController.currentLabel,"/icon/tagged-untagged-media.png","allUntagged",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-                homeModel.getHomeForm().getHomeController().setIconImage(SSNToolBar.desktopHomeLabel,"/icon/white_icon/home.png","home",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
                 }
         } );
         this.initShareForm();

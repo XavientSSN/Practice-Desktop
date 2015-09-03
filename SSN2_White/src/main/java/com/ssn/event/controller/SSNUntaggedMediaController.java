@@ -16,7 +16,6 @@ import com.ssn.model.InstagramMedia;
 import com.ssn.model.SSNHomeModel;
 import com.ssn.ui.custom.component.SSNFileExplorer;
 import com.ssn.ui.custom.component.SSNMessageDialogBox;
-import com.ssn.ui.custom.component.SSNToolBar;
 import com.ssn.ui.form.SSNUntaggedMediaForm;
 import com.ssn.ws.rest.service.LoginWithFacebook;
 import com.ssn.ws.rest.service.LoginWithInstagram;
@@ -96,9 +95,6 @@ public class SSNUntaggedMediaController extends SSNBaseController {
         Object mouseEventObj = e.getSource();
         if (mouseEventObj != null && mouseEventObj instanceof JLabel) {
             JLabel label = (JLabel) mouseEventObj;
-            JLabel toolbarLabel = SSNHomeController.currentLabel;
-            this.getHomeModel().getHomeForm().getHomeController().setIconImage(toolbarLabel,"/icon/tagged-untagged-media.png","allUntagged",SSNConstants.SSN_TOOLBAR_WHITE_FONT_COLOR);
-            this.getHomeModel().getHomeForm().getHomeController().setIconImage(SSNToolBar.desktopHomeLabel,"/icon/white_icon/home.png","home",SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
             this.getHomeModel().getHomeForm().setCursor(new Cursor(Cursor.WAIT_CURSOR));
             int timoutCount = 0;
             logger.info("mouseClicked() label " + label.getName() );

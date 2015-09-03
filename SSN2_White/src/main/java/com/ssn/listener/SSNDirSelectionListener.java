@@ -58,7 +58,7 @@ public class SSNDirSelectionListener implements TreeSelectionListener {
 
     
     public void valueChanged(TreeSelectionEvent event, Boolean homeClicked) {
-
+       //form.getSearchMediaTextField().setText("");
         if(homeClicked != null){
              
             this.homeClicked = homeClicked;
@@ -69,7 +69,7 @@ public class SSNDirSelectionListener implements TreeSelectionListener {
     public void valueChanged(TreeSelectionEvent event) {
         iT = 0;
         dT = 0;
-        
+       // form.getSearchMediaTextField().setText("");
         form.setCheckMultiSelection(false);
         this.form.setCurrentSelectedFile(null);
         DefaultMutableTreeNode node ;
@@ -90,10 +90,10 @@ public class SSNDirSelectionListener implements TreeSelectionListener {
         }
 
         if (fnode != null) {
-           
-            form.getHomeController().refreshIconImageToDefault();
+           // System.out.println("fnode != null fnode.getFile().getAbsolutePath()"+fnode.getFile().getAbsolutePath());
+
             if(fileTree.m_display.getText() != null && !fileTree.m_display.getText().equals("viewAllAlbums") && !fileTree.m_display.getText().equals("instagramMedia")&& !fileTree.m_display.getText().equals("tagUnTaggedMedia"))
-        
+
             fileTree.m_display.setText(fnode.getFile().getAbsolutePath());
             
             if (fnode.getFile().isDirectory()) 
@@ -126,7 +126,7 @@ public class SSNDirSelectionListener implements TreeSelectionListener {
                 
                 form.getFileNamesToBeDeleted().clear();
                 getSSNMediaFolderProperties(path);
-         
+               // System.out.println("fnode == null path"+path);
 
                 if(fileTree.m_display.getText() != null && !fileTree.m_display.getText().equals("viewAllAlbums") && !fileTree.m_display.getText().equals("instagramMedia")&& !fileTree.m_display.getText().equals("tagUnTaggedMedia"))
 
@@ -138,33 +138,33 @@ public class SSNDirSelectionListener implements TreeSelectionListener {
                 if(this.homeClicked != null && this.homeClicked){
                     this.homeClicked = null;
                     File file1 = new File(path);
-                   
+                    // System.out.println("fnode == null file1.getAbsolutePath()"+file1.getAbsolutePath());
 
-                    if(fileTree.m_display.getText() != null && !fileTree.m_display.getText().equals("viewAllAlbums") && !fileTree.m_display.getText().equals("instagramMedia")&& !fileTree.m_display.getText().equals("tagUnTaggedMedia"))
+                     if(fileTree.m_display.getText() != null && !fileTree.m_display.getText().equals("viewAllAlbums") && !fileTree.m_display.getText().equals("instagramMedia")&& !fileTree.m_display.getText().equals("tagUnTaggedMedia"))
 
-                        fileTree.m_display.setText(file1.getAbsolutePath());
-                        //just copied from above if block
-                        if (file1.isDirectory()) {
-
-                            this.form.setCurrentSelectedFile(null);
-                            fileTree.setSelectedFolder(file1.getName());
-
-
-                            File[] file = file1.listFiles();
-                            for (File f : file) {
-                                if (f.isFile()) {
-                                    hiveFiles.add(f.getName());
-                                } else {
-                                }
+                    fileTree.m_display.setText(file1.getAbsolutePath());
+                    // just copied from above if block
+                    if (file1.isDirectory()) {
+                
+                        this.form.setCurrentSelectedFile(null);
+                        fileTree.setSelectedFolder(file1.getName());
+                        
+                        
+                        File[] file = file1.listFiles();
+                        for (File f : file) {
+                            if (f.isFile()) {
+                                hiveFiles.add(f.getName());
+                            } else {
                             }
                         }
+                    }
 
-                        if (hiveFiles != null && hiveFiles.size() > 0) {
+                    if (hiveFiles != null && hiveFiles.size() > 0) {
 
-                            createCompontents(file1.getAbsolutePath(), form, true);
-                        } else {
-                            createCompontents(file1.getAbsolutePath(), form, false);
-                        }
+                        createCompontents(file1.getAbsolutePath(), form, true);
+                    } else {
+                        createCompontents(file1.getAbsolutePath(), form, false);
+                    }
                     
                 }else if(size > 0){
                     // if there are images then show all 

@@ -112,7 +112,20 @@ public class SSNMessageDialogController extends SSNBaseController {
                 }
             }
         }
-
+//        if (mouseEventObj != null && mouseEventObj instanceof JLabel) {
+//
+//            if (dialogBox != null) {
+//                dialogBox.dispose();
+//            }
+//            if (confirmBox != null) {
+//                confirmBox.setResult(JOptionPane.CLOSED_OPTION);
+//                confirmBox.dispose();
+//            }
+//            if (inputBox != null) {
+//                inputBox.setTextValue(null);
+//                inputBox.dispose();
+//            }
+//        }
     }
 
     @Override

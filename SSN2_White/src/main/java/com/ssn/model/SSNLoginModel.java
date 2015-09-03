@@ -100,7 +100,7 @@ public class SSNLoginModel {
             getSsnLoginWS().initWSConnection();
             getSsnLoginWS().prepareRequest(getSsnLoginWS().getRequest());
             response = getSsnLoginWS().getResponse();
-            System.out.println("response ");
+
             if (response != null && response.isSuccess() && response.getCode().equalsIgnoreCase("ssn-200")) {
                   
                 this.getLoginForm().setVisible(false);

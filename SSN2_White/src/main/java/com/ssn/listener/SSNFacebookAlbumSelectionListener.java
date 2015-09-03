@@ -124,7 +124,7 @@ public class SSNFacebookAlbumSelectionListener implements TreeSelectionListener 
                         FileUtils.copyURLToFile(url, file);
                         listOfFiles.add(file);
                     } catch (Exception e) {
-                        logger.error(e);
+                        // e.printStackTrace();
                     }
                 } else {
                     listOfFiles.add(file);
