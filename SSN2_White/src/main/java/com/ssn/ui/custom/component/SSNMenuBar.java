@@ -142,14 +142,15 @@ public class SSNMenuBar extends JMenuBar {
         return image;
     }
     
+    
     private void addSSNUserProfileMenu() {        
-        String cUserName = getHomeForm().getHomeModel().getLoggedInUserName().equals("") ? "" : getHomeForm().getHomeModel().getLoggedInUserName().toUpperCase();
+        String cUserName = getHomeForm().getHomeModel().getLoggedInUserName().equals("") ? "" : getHomeForm().getHomeModel().getLoggedInUserFirstName();
        
         if(cUserName.length()>9)
             cUserName = cUserName.substring(0,9)+"...";
         
         userProfileMenu = new JMenu(cUserName);
-        userProfileMenu.setToolTipText(getHomeForm().getHomeModel().getLoggedInUserName().equals("") ? "" : getHomeForm().getHomeModel().getLoggedInUserName().toUpperCase());
+        userProfileMenu.setToolTipText(getHomeForm().getHomeModel().getLoggedInUserName().equals("") ? "" : getHomeForm().getHomeModel().getLoggedInUserFirstName());
         userProfileMenu.setForeground(SSNConstants.SSN_WHITE_FONT_COLOR);
         userProfileMenu.setName("Profile");
         
@@ -166,6 +167,7 @@ public class SSNMenuBar extends JMenuBar {
         
         Border borderFilterMenu = BorderFactory.createLineBorder(SSNConstants.SSN_BLACK_BACKGROUND_COLOR);
         this.setBorder(borderFilterMenu);
+        setProfileMenu(userProfileMenu);
         this.add(userProfileMenu);   
 
     }
@@ -353,5 +355,13 @@ public class SSNMenuBar extends JMenuBar {
      */
     public void setUserProfileMenu(JMenu userProfileMenu) {
         this.userProfileMenu = userProfileMenu;
+    }
+    
+    public JMenu getProfileMenu() {
+        return userProfileMenu;
+    }
+
+    public void setProfileMenu(JMenu iconMenu) {
+        this.userProfileMenu = iconMenu;
     }
 }

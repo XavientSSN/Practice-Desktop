@@ -3,12 +3,10 @@ package com.ssn.helper;
 import com.ssn.app.loader.SSNConstants;
 import com.ssn.app.loader.SSNDialogChoice;
 import com.ssn.dao.SSNDao;
-import com.ssn.listener.SSNHiveAlbumSelectionListner;
 import com.ssn.ui.custom.component.BackGroundImagePanel;
 import com.ssn.ui.custom.component.SSMMediaGalleryPanel;
 import static com.ssn.ui.custom.component.SSMMediaGalleryPanel.readMetaData;
 import com.ssn.ui.custom.component.SSNConfirmationDialogBox;
-import com.ssn.ui.custom.component.SSNFileExplorer;
 import com.ssn.ui.custom.component.SSNGalleryMetaData;
 import com.ssn.ui.custom.component.SSNImagePanel;
 import com.ssn.ui.custom.component.SSNMessageDialogBox;
@@ -16,7 +14,6 @@ import com.ssn.ui.custom.component.SSNMyScrollbarUI;
 import com.ssn.ui.custom.component.WrapLayout;
 import com.ssn.ui.form.SSNHomeForm;
 import com.ssn.ui.form.SSNShareForm;
-import com.ssn.ws.rest.response.SSNAlbumMedia;
 import com.xuggle.mediatool.IMediaReader;
 import com.xuggle.mediatool.MediaListenerAdapter;
 import com.xuggle.mediatool.ToolFactory;
@@ -48,7 +45,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -508,7 +504,6 @@ public class SSNGalleryHelper extends JPanel implements AdjustmentListener, Comp
                      }
 
                 });
-                
                 buttons.add(delete);
                 buttons.add(Box.createHorizontalStrut(5));
 
@@ -560,16 +555,15 @@ public class SSNGalleryHelper extends JPanel implements AdjustmentListener, Comp
                 });
 
                 ssnHomeForm.getAllChkBoxPanel().add(panelChk);
-           
+
                 buttons.add(Box.createHorizontalStrut(5));
                 buttons.setBackground(new Color(0, 0, 0, 125));
 
                 bottomImg.add(Box.createHorizontalGlue(), BorderLayout.WEST);
                 bottomImg.setBackground(new Color(0, 0, 0, 125));
-                if(!SSNFileExplorer.selectedMedia.equals("hive"))
-                    bottomImg.add(buttons, BorderLayout.EAST);
+                bottomImg.add(buttons, BorderLayout.EAST);
                 bottomImg.setVisible(false);
-                
+
                 totalPanel.add(bottomImg, BorderLayout.SOUTH);
                 totalPanel.add(panelChk, BorderLayout.NORTH);
                 thumbnil.add(totalPanel, BorderLayout.CENTER);
@@ -780,24 +774,7 @@ public class SSNGalleryHelper extends JPanel implements AdjustmentListener, Comp
                 /*  For video end*/
             } else {
                 // System.out.println("value of " + count);
-                if(SSNFileExplorer.selectedMedia.equals("hive")){
-                    SSNAlbumMedia sSNAlbumMedia =   SSNHiveAlbumSelectionListner.ssnHiveAlbumAllMedia.get(listOfFiles[count].getName());
-                    File getFilefromHive        =   new File(SSNHelper.getSsnTempDirPath()+sSNAlbumMedia.getAlbums()+File.separator+listOfFiles[count].getName())   ;
-                    URL url = null;
-                    try {
-                        url = new URL(sSNAlbumMedia.getFile_url());
-                    } catch (MalformedURLException ex) {
-                       log.error(ex);
-                    }
-                    try {
-                        FileUtils.copyURLToFile(url, getFilefromHive);
-                    } catch (IOException ex) {
-                       log.error(ex);
-                    }
-                    ssnHomeForm.getHomeModel().openImageSlider(new JLabel(), listOfFiles, count);  
-                }else{
-                    ssnHomeForm.getHomeModel().openImageSlider(new JLabel(), listOfFiles, count);
-                }
+                ssnHomeForm.getHomeModel().openImageSlider(new JLabel(), listOfFiles, count);
             }
         }
 
@@ -1063,23 +1040,13 @@ public class SSNGalleryHelper extends JPanel implements AdjustmentListener, Comp
     public static boolean isTagged(String location,String tagValue) {
         boolean flag = false;
         if ((location != null && !location.trim().isEmpty())&& (tagValue != null && !tagValue.trim().isEmpty())) {
+            //System.out.println(data.getMediaName() + " media location " + data.getMediaLocation()+"data.getSsnKeywords()::"+data.getSsnKeywords()+"data.getEditMediaLocation()"+data.getEditMediaLocation());
             flag = true;
         }
+//        else if (data.getSsnKeywords() != null && !data.getSsnKeywords().isEmpty()) {
+//           // System.out.println(data.getMediaName() + " media Tagged " + data.getSsnKeywords());
+//            flag = true;
+//        }
         return flag;
-    }
-    public static void downloadMedia(File[] listOfFiles,int index){
-        SSNAlbumMedia sSNAlbumMedia =   SSNHiveAlbumSelectionListner.ssnHiveAlbumAllMedia.get(listOfFiles[index].getName());
-                    File getFilefromHive        =   new File(SSNHelper.getSsnTempDirPath()+sSNAlbumMedia.getAlbums()+File.separator+listOfFiles[index].getName())   ;
-                    URL url = null;
-                    try {
-                        url = new URL(sSNAlbumMedia.getFile_url());
-                    } catch (MalformedURLException ex) {
-                       log.error(ex);
-                    }
-                    try {
-                        FileUtils.copyURLToFile(url, getFilefromHive);
-                    } catch (IOException ex) {
-                       log.error(ex);
-                    }
     }
 }

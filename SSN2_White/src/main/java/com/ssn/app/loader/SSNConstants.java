@@ -99,10 +99,10 @@ public interface SSNConstants {
     public Color SSN_IMAGE_TOOLBAR_BLACK_COLOR = new Color(77, 77, 77);
     // final public String SSN_WEB_HOST = "http://162.209.99.244/";
     //Local environment
-        final public String SSN_WEB_HOST = "http://ssn.xavient.com/our_hive/";
+       // final public String SSN_WEB_HOST = "http://ssn.xavient.com/our_hive/";
     //UAT environment
         //final public String SSN_WEB_HOST = "http://162.209.99.244/our_hive/";
-        //final public String SSN_WEB_HOST =  "http://staging.getourhive.com/our_hive/";
+        final public String SSN_WEB_HOST =  "http://staging.getourhive.com/our_hive/";
     //prod enviornment
        // final public String SSN_WEB_HOST = "https://app.getourhive.com/";
       

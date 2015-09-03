@@ -5,7 +5,6 @@ import com.ssn.event.controller.SSNHomeController;
 import com.ssn.helper.SSNGalleryHelper;
 import com.ssn.helper.SSNHelper;
 import com.ssn.listener.SSNDirSelectionListener;
-import com.ssn.listener.SSNHiveAlbumSelectionListner;
 import com.ssn.model.SSNHomeModel;
 import com.ssn.model.SSNSocialModel;
 import com.ssn.schedule.SSNScheduleTagPanelForm;
@@ -73,6 +72,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -164,7 +164,6 @@ public class SSNHomeForm extends JFrame {
     private final static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SSNHomeForm.class);
     private SSNDirSelectionListener ssnDirSelectionListener ;
     JPanel thumbnailImagePanel = null;
-    private SSNHiveAlbumSelectionListner    ssnHiveAlbumSelectionListner  = null;  
     //schedule a tag
     public static int tagId = 0;
     public static int subTagId = 0;
@@ -175,7 +174,7 @@ public class SSNHomeForm extends JFrame {
             SSNHelper.createAndloadSSNDirs();
             this.setLoginForm(loginForm);
             this.setLoginResponse(loginResponse);
-          
+            //ssnFileExplorer = new SSNFileExplorer(this);
             this.initHomeForm();
             this.setBackground(SSNConstants.SSN_BLACK_BACKGROUND_COLOR);
             
@@ -209,7 +208,7 @@ public class SSNHomeForm extends JFrame {
 
             this.initHomeForm();
             this.setBackground(SSNConstants.SSN_BLACK_BACKGROUND_COLOR);
-         
+           // this.addWindowListener(this.getHomeController());
             setFrameSize();
              
         }catch(Exception ex){
@@ -228,7 +227,8 @@ public class SSNHomeForm extends JFrame {
             this.setTwitterOAuthToken(oAuthToken);
             this.initHomeForm();
             this.setBackground(SSNConstants.SSN_BLACK_BACKGROUND_COLOR);
-            
+            //this.addWindowListener(this.getHomeController());
+            //this.setMinimumSize(SSNConstants.SSN_SCREEN_SIZE);
              
             setFrameSize();
            
@@ -250,7 +250,7 @@ public class SSNHomeForm extends JFrame {
     }
 
      private void initHomeFormGUIComponents() {
-    
+        //this.initHomeMenuBar();
         this.initHomeToolBar();
         this.initSearchPanel();
         this.initHomePanels();
@@ -267,9 +267,9 @@ public class SSNHomeForm extends JFrame {
         searchVoiceMediaStart.setSize(32,32);
         searchVoiceMediaStart.setName("searchVoiceMedia");
         searchVoiceMediaStart.addMouseListener(this.getHomeController()); 
-     
+        //searchVoiceMediaStart.setBackground(new Color(32,47,54,1));
         
-
+        //setSearchMediaTextField(new JTextField("What memories are you looking for? Search by keyword here!")); 
         setSearchMediaTextField(new SSNIconTextField("","    What memories are you looking for? Search by keyword here!","searchMedia"));
         getSearchMediaTextField().setName("searchMedia");
         getSearchMediaTextField().setColumns(12); 
@@ -300,18 +300,19 @@ public class SSNHomeForm extends JFrame {
         radioPanel.setForeground(SSNConstants.SSN_FONT_COLOR);
         radioPanel.setFont(new Font("open sans",Font.PLAIN,12));
         radioPanel.setOpaque(false);
-    
+        //JPanel panel1 = new JPanel();
         JPanel panel2 = new JPanel();
         JPanel panel3 = new JPanel();
         
-      
+        //panel1.add(getSearchMediaTextField(),BorderLayout.NORTH);
         panel2.add(searchMediaIcon,BorderLayout.NORTH);
         panel3.add(searchVoiceMediaStart,BorderLayout.NORTH);
         
         panel2.setOpaque(false);
         panel3.setOpaque(false);
         
-    
+        //panel1.setBorder(null);
+        //panel1.setBackground(new Color(32,47,54));
         panel2.setBackground(new Color(223,223,223,0));
         panel3.setBackground(new Color(223,223,223,0));
             
@@ -339,7 +340,8 @@ public class SSNHomeForm extends JFrame {
             gbc.gridy = 0;
             jPanel.add(panel2, gbc); 
             
-        
+            //gbc.insets = new Insets(2,1,10,2);
+            //gbc.ipadx = 1;
             gbc.gridx = 2;
             gbc.gridy = 0;
             jPanel.add(panel3, gbc); 
@@ -364,10 +366,11 @@ public class SSNHomeForm extends JFrame {
             this.getSearchPanel().setLayout(layout1);        
             GridBagConstraints gbc1 = new GridBagConstraints();
             gbc1.fill = GridBagConstraints.HORIZONTAL;
-          
+            //gbc1.gridheight = 100;
         
         this.getSearchPanel().setBackground(new Color(32,47,54,0));
-        
+        //this.getSearchPanel().add(new JPanel(), BorderLayout.NORTH);
+       // gbc.ipady = 20;
         gbc1.gridx = 0;
         gbc1.gridy = 0;
         JPanel blankPanel = new JPanel();
@@ -397,19 +400,18 @@ public class SSNHomeForm extends JFrame {
 
     private void initHomeToolBar() {
         Map<String, String> toolBarItemsMap = new LinkedHashMap<String, String>();
-        toolBarItemsMap.put(SSNConstants.SSN_TOOLBAR_HOME, "<B><>DESKTOP MEDIA|/icon/white_icon/home.png|home|Desktop Media");
-        toolBarItemsMap.put("Hive", "<B><>HIVE MEDIA|/icon/view-hive-icon.png|hive|Hive Media");
+       // toolBarItemsMap.put(SSNConstants.SSN_TOOLBAR_HOME_LOGO, "|/images/ssn-hive-logo.png|logo|Home");
+        toolBarItemsMap.put(SSNConstants.SSN_TOOLBAR_HOME, "<B><>HOME|/icon/home.png|home|Home");
         toolBarItemsMap.put(SSNConstants.SSN_TOOLBAR_CREATE_ALBUM, "<B>&nbsp;CREATE &nbsp;ALBUM|/icon/create-album-normal.png|createAlbum|Create Album");
 
         toolBarItemsMap.put(SSNConstants.SSN_TOOLBAR_VIEW_ALL_ALBUM, "<B>&nbsp;VIEW ALL &nbsp;MEDIA|/icon/view-albums-normal.png|viewAllAlbum|View All Media");
         toolBarItemsMap.put(SSNConstants.SSN_TOOLBAR_SLIDE_SHOW, "<B>&nbsp;SLIDE &nbsp;SHOW|/icon/slideshow-normal.png|startSlideShow|Start Slide Show");
 
-        toolBarItemsMap.put(SSNConstants.SSN_TOOLBAR_UPLOAD_PHOTO, "<B>&nbsp;IMPORT&nbsp;MEDIA|/icon/import_media.png|uploadPhoto|Import Media");
-        toolBarItemsMap.put(SSNConstants.SSN_TOOLBAR_SYNC_MEDIA, "<B>&nbsp;UPLOAD&nbsp;TO&nbsp;HIVE|/icon/upload-normal.png|uploadMedia|Upload To Hive");
+        toolBarItemsMap.put(SSNConstants.SSN_TOOLBAR_UPLOAD_PHOTO, "<B>&nbsp;UPLOAD&nbsp;MEDIA|/icon/upload-normal.png|uploadPhoto|Upload Media");
+        toolBarItemsMap.put(SSNConstants.SSN_TOOLBAR_SYNC_MEDIA, "<B>&nbsp;SYNCHRONIZE&nbsp;MEDIA|/icon/cloud-normal.png|synchronizeMedia|Synchronize Media");
         toolBarItemsMap.put(SSNConstants.SSN_TOOLBAR_OPEN_CAMERA, "<B>&nbsp;CAPTURE &nbsp;MEDIA|/icon/camera-normal.png|openCamera|Capture Media");
         toolBarItemsMap.put(SSNConstants.SSN_TOOLBAR_SCHEDULE_TAG, "<B>&nbsp;SCHEDULE&nbsp;&nbsp;A &nbsp;TAG|/icon/schedule-active.png|scheduleTag|Schedule A Tag");
         toolBarItemsMap.put(SSNConstants.SSN_TOOLBAR_ALL_UNTAGGED, "<B>TAG &nbsp;UNTAGGED &nbsp;MEDIA|/icon/tagged-untagged-media.png|AllUntagged|Tag Untagged Media");
-
         
         this.setSsnHomeToolBar(new SSNToolBar(toolBarItemsMap, this.getLoginForm(), this, this.getHomeController()));
         this.getSsnHomeToolBar().setMargin(new Insets(13, 5, 13, 20));
@@ -470,6 +472,7 @@ public class SSNHomeForm extends JFrame {
             BufferedImage image = ImageIO.read(imgURL);
             Image background = image.getScaledInstance(image.getWidth(), image.getHeight(), Image.SCALE_SMOOTH);
             
+
 
             this.setSsnHomeCenterMainPanel(new JPanel(new BorderLayout()));
             this.getSsnHomeCenterMainPanel().setBackground(SSNConstants.SSN_BLACK_BACKGROUND_COLOR);
@@ -567,7 +570,7 @@ public class SSNHomeForm extends JFrame {
             this.setSsnHomeLeftMainPanel(new JPanel());
             this.getSsnHomeLeftMainPanel().setLayout(new BorderLayout());
            
-          
+             // xyz.add
             this.getSsnHomeLeftMainPanel().setBorder(BorderFactory.createLineBorder(SSNConstants.SSN_BLACK_BACKGROUND_COLOR));
             this.getSsnHomeLeftMainPanel().setBackground(SSNConstants.SSN_BLACK_BACKGROUND_COLOR);
             this.getSsnHomeLeftMainPanel().add(toggleButtonLeft, BorderLayout.CENTER);
@@ -818,11 +821,17 @@ public class SSNHomeForm extends JFrame {
             scroller = new JScrollPane(galleryPanel);
             scroller.setBorder(new EmptyBorder(0, 0, 0, 0));
             scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            //int size = getCurrentGallery().length;
+
+           // double screenRatio =this.getSsnHomeCenterPanel().getWidth() / 508.0;
+          
             Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
             
             double screenHeight  = dimension.getHeight();
             double screenWidth  = dimension.getWidth();
                     
+            
+            
             double centerPanelWidth =(screenWidth - (this.getSsnHomeLeftPanel().getWidth()+this.getSsnHomeRightPanel().getWidth()));
             double centerPanelHeight = screenHeight- (this.getSsnHomeToolBar().getHeight()+(this.getSearchPanel().getHeight()*2)) ;
             int noOfImagesInRow = (int)(centerPanelWidth/SSNConstants.SSN_IMAGE_THUMBNAIL_WIDTH);
@@ -831,7 +840,15 @@ public class SSNHomeForm extends JFrame {
             int totalRows = this.getSsnGalleryHelper().getImgs().length/noOfImagesInRow;
             totalRows =fraction==0?totalRows:totalRows+1 ;
             
+            
+//            double ratio = ((totalRows * (SSNConstants.SSN_IMAGE_THUMBNAIL_HEIGHT +31)) - centerPanelHeight);
+//            ratio = ratio < 0 ? (ratio*(-1)) : ratio;//if ratio is in negetive
+            
+            
             scroller.getVerticalScrollBar().setUI(new SSNMyScrollbarUI(centerPanelHeight));
+            
+
+            
             Border borderVer = BorderFactory.createEmptyBorder(0, 0, 0, 1);
             scroller.setBorder(borderVer);
 
@@ -995,14 +1012,6 @@ public class SSNHomeForm extends JFrame {
         
         filterPanel.add(filterMenuBar);
         
-        selectAll.setVisible(true);
-        chk.setVisible(true);
-        
-        if(SSNFileExplorer.selectedMedia.equals("hive")){
-            selectAll.setVisible(false);
-            chk.setVisible(false);
-        }
-        
        // add select all checkbox and filter menu on panel
        panel.add(selectAll);  
        panel.add(new JLabel(" "));
@@ -1063,15 +1072,15 @@ public class SSNHomeForm extends JFrame {
         buttonSet.add("SIZE");
         
         JPanel sortPanel    =   new JPanel(new BorderLayout());
-       
+       // sortPanel.setLayout(new BoxLayout(sortPanel,BoxLayout.X_AXIS));
         this.setSsnHomeCenterSortPanel(sortPanel);
         this.getSsnHomeCenterSortPanel().setName("SortPanel");
         this.getSsnHomeCenterSortPanel().setPreferredSize(new Dimension(450, 39));
-       
+        //this.getSsnHomeCenterSortPanel().setBackground(new Color(35, 35, 35));
         this.getSsnHomeCenterSortPanel().setBackground(SSNConstants.SSN_PANEL_BLACK_BARS_COLOR);
 
         JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
-       
+        //buttonPanel.setPreferredSize(new Dimension(200, 20));
         buttonPanel.setBackground(SSNConstants.SSN_PANEL_BLACK_BARS_COLOR);
          buttonPanel.setMinimumSize(new Dimension(130, 20));
         buttonPanel.setPreferredSize(new Dimension(300, 20));
@@ -1097,8 +1106,23 @@ public class SSNHomeForm extends JFrame {
         this.getSsnHomeCenterSortPanel().add(buttonPanel, BorderLayout.WEST);
         
         
+        /* Create delete and share button panel : start*/
+        JLabel deleteMediaLabel = new JLabel(new ImageIcon(getClass().getResource("/icon/delete-deactive.png")));
+        deleteMediaLabel.setName("deletePhoto");
+        deleteMediaLabel.addMouseListener(homeController);
         
-        this.getSsnHomeCenterSortPanel().add(getDesktopMedialPanel(),BorderLayout.EAST);
+        JLabel shareMediaLabel = new JLabel(new ImageIcon(getClass().getResource("/icon/share-deactive.png")));
+        shareMediaLabel.setName("share");        
+        shareMediaLabel.addMouseListener(homeController);
+        
+        JPanel deleteSharePanel = new JPanel();
+       
+        deleteSharePanel.add(deleteMediaLabel);
+        deleteSharePanel.add(shareMediaLabel);
+       
+        deleteSharePanel.setBackground(new Color(5,5,0,1));
+        
+        this.getSsnHomeCenterSortPanel().add(deleteSharePanel,BorderLayout.EAST);
         /* Create delete and share button panel : end*/
        // this.getSsnHomeCenterSortPanel().add(filterPanel, JPanel.CENTER_ALIGNMENT);
         if(albumName.equals("viewAllAlbums"))
@@ -1127,46 +1151,6 @@ public class SSNHomeForm extends JFrame {
         
         this.getSsnHomeCenterSortPanel().add(Box.createVerticalStrut(1), BorderLayout.SOUTH);
         return this.getSsnHomeCenterSortPanel();
-    }
-    
-    private JPanel getDesktopMedialPanel()
-    {
-        JLabel downloadMediaToLibrary = new JLabel(new ImageIcon(getClass().getResource("/icon/download_selected_media_to_library.png")));
-        downloadMediaToLibrary.setName("downloadMedia");
-        downloadMediaToLibrary.addMouseListener(homeController);
-        
-        JLabel exportMediaLabel = new JLabel(new ImageIcon(getClass().getResource("/icon/export-selected-media-to-device.png")));
-        exportMediaLabel.setName("exportPhoto");
-        exportMediaLabel.addMouseListener(homeController);
-        
-        /* Create delete and share button panel : start*/
-        JLabel deleteMediaLabel = new JLabel(new ImageIcon(getClass().getResource("/icon/delete-deactive.png")));
-        deleteMediaLabel.setName("deletePhoto");
-        deleteMediaLabel.addMouseListener(homeController);
-        
-        JLabel shareMediaLabel = new JLabel(new ImageIcon(getClass().getResource("/icon/share-deactive.png")));
-        shareMediaLabel.setName("share");        
-        shareMediaLabel.addMouseListener(homeController);
-        
-        downloadMediaToLibrary.setVisible(false);
-        exportMediaLabel.setVisible(true);
-        deleteMediaLabel.setVisible(true);
-        shareMediaLabel.setVisible(true);
-        
-        if(SSNFileExplorer.selectedMedia.equals("hive")){
-            downloadMediaToLibrary.setVisible(true);
-            exportMediaLabel.setVisible(false);
-            deleteMediaLabel.setVisible(false);
-            shareMediaLabel.setVisible(false);
-        }
-        JPanel deleteSharePanel = new JPanel();
-        deleteSharePanel.add(downloadMediaToLibrary);
-        deleteSharePanel.add(exportMediaLabel);
-        deleteSharePanel.add(deleteMediaLabel);
-        deleteSharePanel.add(shareMediaLabel);
-       
-        deleteSharePanel.setBackground(new Color(5,5,0,1));
-        return deleteSharePanel;
     }
 
     private JPanel getsortbutton(String text, int width, boolean addDirection, boolean direction) {
@@ -1854,14 +1838,6 @@ public class SSNHomeForm extends JFrame {
 
     public void setThumbnailImagePanel(JPanel thumbnailImagePanel) {
         this.thumbnailImagePanel = thumbnailImagePanel;
-    }
-
-    public SSNHiveAlbumSelectionListner getSsnHiveAlbumSelectionListner() {
-        return ssnHiveAlbumSelectionListner;
-    }
-
-    public void setSsnHiveAlbumSelectionListner(SSNHiveAlbumSelectionListner ssnHiveAlbumSelectionListner) {
-        this.ssnHiveAlbumSelectionListner = ssnHiveAlbumSelectionListner;
     }
     
     

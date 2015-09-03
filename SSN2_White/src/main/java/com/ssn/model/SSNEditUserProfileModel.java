@@ -4,7 +4,9 @@ import com.ssn.app.loader.SSNConstants;
 import com.ssn.app.loader.SSNDialogChoice;
 import com.ssn.dao.SSNDao;
 import com.ssn.event.controller.SSNUserProfileController;
+import com.ssn.ui.custom.component.SSNMenuBar;
 import com.ssn.ui.custom.component.SSNMessageDialogBox;
+import com.ssn.ui.custom.component.SSNToolBar;
 import com.ssn.ui.form.SSNEditUserProfileForm;
 import com.ssn.ui.form.SSNHomeForm;
 import com.ssn.ws.rest.request.SSNEditUserRequest;
@@ -16,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 
@@ -77,13 +80,13 @@ public class SSNEditUserProfileModel {
 
             if (success) {
                 this.getHomeForm().setSocialModel(model);
-                //JOptionPane.showMessageDialog(getUserProfileForm(), "Profile Updated Successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+               
                 SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
                 dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(),"Success","","Profile Updated Successfully");
                 clearEditUserProfileFields();
                 getUserProfileForm().dispose();
             } else {
-                //JOptionPane.showMessageDialog(getUserProfileForm(), "Profile could not be updated", "Error", JOptionPane.ERROR_MESSAGE);
+               
                 SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
                 dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(),"Error","","Profile could not be updated");
                 clearEditUserProfileFields();
@@ -111,7 +114,7 @@ public class SSNEditUserProfileModel {
             Matcher m = p.matcher(mobile.replaceAll("-", ""));
             mobile      = mobile.replaceAll("0", " ");
             
-            //String pattern= "[a-zA-Z0-9]{6}";
+           
             
             String pattern= "\\d*";
             Pattern p2 = Pattern.compile(pattern);
@@ -213,6 +216,11 @@ public class SSNEditUserProfileModel {
         getHomeForm().getLoginResponse().getData().getUser().setBirth_date(editUserDataMap.get("birth_date"));
         getHomeForm().getLoginResponse().getData().getUser().setGender(editUserDataMap.get("gender"));
         getHomeForm().getLoginResponse().getData().getUser().setZipcode(editUserDataMap.get("zipcode"));
+        JMenu  userProfileMenu = ((SSNMenuBar)((SSNToolBar)getHomeForm().getSsnHomeToolBar()).getProfileMenu()).getProfileMenu();
+        userProfileMenu.setText(editUserDataMap.get("first_name"));
+        userProfileMenu.setToolTipText(editUserDataMap.get("first_name"));
+        getHomeForm().getSsnHomeToolBar().revalidate();
+        getHomeForm().revalidate();
     }
 //user_profile_picture
     /**

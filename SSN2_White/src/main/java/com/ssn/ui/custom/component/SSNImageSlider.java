@@ -168,13 +168,11 @@ public class SSNImageSlider extends JFrame implements Runnable,MouseListener, Mo
             imageList = imageListMy;
             addRotateRightPanel();
             addRotateLeftPanel();
-            
+            addPlayControlPanel();
             addCloseControlPanel();
-            if(!SSNFileExplorer.selectedMedia.equals("hive")){
-                addPreviousControlPanel();
-                addNextControlPanel();
-                addPlayControlPanel();
-            }
+            addPreviousControlPanel();
+
+            addNextControlPanel();
             addZoomOutPanel();
             addZoomInPanel();
             addSavePanel();
@@ -893,9 +891,8 @@ public class SSNImageSlider extends JFrame implements Runnable,MouseListener, Mo
             return imgCountPanel;
         }
         private JPanel updatePanel() {
-          if(!SSNFileExplorer.selectedMedia.equals("hive"))
-                enablePreviousButton(this.index);
           
+            enablePreviousButton(this.index);
             int i=this.index;
            
                 if(this.index>=imageList.size())
@@ -997,10 +994,8 @@ public class SSNImageSlider extends JFrame implements Runnable,MouseListener, Mo
                 setVisible(true);
             }
 
-        if(!SSNFileExplorer.selectedMedia.equals("hive")) {
             enablePreviousButton(currentIndex1);
             enableNextButton(currentIndex1);
-        }
             
 
         }
@@ -1022,9 +1017,6 @@ public class SSNImageSlider extends JFrame implements Runnable,MouseListener, Mo
              
             if (currentIndex1 > 0 && (currentIndex1 <= imageList.size() - 1)) {
                 currentIndex1 = currentIndex1 - 1;
-//                if(SSNFileExplorer.selectedMedia.contains("hive")){
-//                    SSNGalleryHelper.downloadMedia(imageListForOperation, currentIndex1);
-//                }
                 homeForm.setCurrentFile(imageListForOperation.get(currentIndex1));
                 BufferedImage image1 = null;
                 try {
@@ -1038,10 +1030,8 @@ public class SSNImageSlider extends JFrame implements Runnable,MouseListener, Mo
                     setImagePosInArray(currentIndex1);
                 }
             } 
-            if(!SSNFileExplorer.selectedMedia.equals("hive")){
-                enablePreviousButton(currentIndex1);
-                enableNextButton(currentIndex1);
-            }
+            enablePreviousButton(currentIndex1);
+            enableNextButton(currentIndex1);
             /*
             *  The below line of code displays the smaller images in full-screen mode with stretching & skewing
             */

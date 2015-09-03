@@ -102,9 +102,9 @@ public class SSNMetadataListener implements MouseListener {
                          for(String files:fileList)
                          {
                     
-                       
+                       // File file = new File(panel.getMediaFileLocation());
                           File file = new File(files);
-                       
+                       // if (panel.getRatingsTxt().getText().isEmpty() || (StringUtils.isNumeric(panel.getRatingsTxt().getText()) && Integer.parseInt(panel.getRatingsTxt().getText())<6)) {
                            boolean flag=false;
                          if(checkVideo(file))
                          {
@@ -118,7 +118,7 @@ public class SSNMetadataListener implements MouseListener {
                          }
                          else
                          {
-                              if(panel.getLocationTxt().getText()!=null && !panel.getLocationTxt().getText().equals(""))
+                             if(panel.getLocationTxt().getText()!=null && !panel.getLocationTxt().getText().equals(""))
                              {
                                  if(!file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".")+1,file.getAbsolutePath().length()).equalsIgnoreCase("PNG")){
                                     flag = SSMMediaGalleryPanel.writeImageMetaData(file, panel.getTitleTxt().getText(), panel.getTagText().getText(), panel.getCommentsTxt().getText(), panel.getLocationTxt().getText()+panel.getAddressTxt().getText(), null, null, "","");
@@ -127,7 +127,7 @@ public class SSNMetadataListener implements MouseListener {
                                  }
                              }
                              else{
-                                 if(!file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".")+1,file.getAbsolutePath().length()).equalsIgnoreCase("PNG")){
+                                 if(file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".")+1,file.getAbsolutePath().length()).equalsIgnoreCase("PNG")){
                                        flag = SSMMediaGalleryPanel.writeImageMetaData(file, panel.getTitleTxt().getText(), panel.getTagText().getText(), panel.getCommentsTxt().getText(), panel.getAddressTxt().getText(), null, null, "","");
                                 }else{
                                      flag=true;
@@ -183,7 +183,7 @@ public class SSNMetadataListener implements MouseListener {
                                 { 
                                 if((panel.getLocationTxt().getText() != null && !panel.getLocationTxt().getText().trim().isEmpty()) || (panel.getTagText().getText() != null && !panel.getTagText().getText().trim().isEmpty()))
                                 {
-                                    FileUtils.copyFile(file, new File(folder.getAbsolutePath() + File.separator + file.getName()));
+                                 FileUtils.copyFile(file, new File(folder.getAbsolutePath() + File.separator + file.getName()));
                                  }
                                 title = folder.getAbsolutePath() + File.separator + file.getName();
                                 }

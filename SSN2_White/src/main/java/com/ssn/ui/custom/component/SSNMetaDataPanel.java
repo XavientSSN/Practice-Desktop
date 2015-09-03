@@ -290,6 +290,10 @@ public class SSNMetaDataPanel extends JPanel {
         faceTag.setForeground(SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
         faceTag.setFont(new Font("open sans", Font.BOLD, 11));
         
+//        ratings = new JLabel("RATINGS : ");
+//        ratings.setForeground(SSNConstants.SSN_TEXT_LABEL_YELLOW_COLOR);
+//        ratings.setFont(new Font("open sans", Font.BOLD, 11));
+
         setFileNameTxt(new JLabel(galleryData.getMediaFileName()));
         getFileNameTxt().setForeground(SSNConstants.SSN_WHITE_FONT_COLOR);
         getFileNameTxt().setFont(new Font("open sans", Font.PLAIN, 11));
@@ -311,39 +315,41 @@ public class SSNMetaDataPanel extends JPanel {
 
             @Override
             public void focusLost(FocusEvent e) {
-
-                if (isCheckWronEntry()) {
-                    getTitleTxt().setText("");
+               
+                
+                 if(isCheckWronEntry())
+                {
+                   getTitleTxt().setText("");
                     setCheckWronEntry(false);
-                } else {
-                    String input = ((JTextField) e.getSource()).getText();
-                    titleTxt.setText(input.trim());
+                }else
+                {
+                 String input = ((JTextField) e.getSource()).getText();
+                 titleTxt.setText(input.trim());
                 }
-                if (titleTxt.getText().length() > 50) {
-                    titleTxt.setText(titleTxt.getText().substring(0, 50));
-                }
+                if(titleTxt.getText().length() > 50)
+                  titleTxt.setText(titleTxt.getText().substring(0,50));
             }
         });
         titleTxt.addKeyListener(new KeyAdapter() {
-
-            @Override
+            
+             @Override
             public void keyPressed(KeyEvent e) {
-                if (isCheckWronEntry()) {
-                    getTitleTxt().setText("");
-                    setCheckWronEntry(false);
+                if(isCheckWronEntry())
+                {
+                   getTitleTxt().setText("");
+                   setCheckWronEntry(false);
                 }
-                if (titleTxt.getText().length() > 50) {
-                    titleTxt.setText(titleTxt.getText().substring(0, 50));
-                }
+                 if(titleTxt.getText().length() > 50)
+                  titleTxt.setText(titleTxt.getText().substring(0,50));
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
                 String input = ((JTextField) e.getSource()).getText();
                 // using pattern with flags
-                if (KeyEvent.VK_ALT == e.getKeyCode()) {
-                    setCheckWronEntry(true);
-
+             if (KeyEvent.VK_ALT  == e.getKeyCode()) {
+                     setCheckWronEntry(true);
+                    
                     SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
                     dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Error", "", "The entered key combination are not allowed");
                 }
@@ -353,13 +359,14 @@ public class SSNMetaDataPanel extends JPanel {
                 if (matcher.find()) {
                     String stemp = input.replaceAll("[%$&+,:;=?@#|]", "");
                     titleTxt.setText(stemp);
-
+                   
                     SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
                     dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(), "Error", "", "Special characters are not allowed!");
 
                 }
 
                // using Matcher find(), group(), start() and end() methods
+
                 Pattern regex1 = Pattern.compile("\\s{2,}");
                 Matcher matcher1 = regex1.matcher(input);
                 if (input != null && input.length() > 0) {
@@ -432,8 +439,12 @@ public class SSNMetaDataPanel extends JPanel {
 
             @Override
             public void focusLost(FocusEvent e) {
-
+//                ratingValidationMessage.setText("");
+//                ratingValidationMessage.setVisible(false);
                  File file = new File(getMediaFileLocation());
+//                if (checkVideo(file)) {
+//                      getLocationTxt().setText("");
+//                }
                  
                  if(isCheckWronEntry())
                 {
@@ -845,7 +856,7 @@ public class SSNMetaDataPanel extends JPanel {
             return renamed.getPath();
         }
     }
-
+// private JPanel populateFolderSouthPanel(JLabel titleTxtFld,JLabel locationTxtFld,JLabel commentsTxtFld,JLabel modifiedTxtFld)
 
     private JPanel populateFolderSouthPanel(JLabel titleTxtFld, JLabel locationTxtFld, JLabel commentsTxtFld, JLabel modifiedTxtFld) {
         JPanel southFolder = new JPanel();

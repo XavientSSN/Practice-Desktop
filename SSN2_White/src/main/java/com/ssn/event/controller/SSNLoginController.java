@@ -6,7 +6,6 @@ import com.ssn.app.loader.SSNDialogChoice;
 import com.ssn.dao.SSNDao;
 import com.ssn.helper.SSNHelper;
 import com.ssn.model.SSNLoginModel;
-import com.ssn.ui.custom.component.SSNFileExplorer;
 import com.ssn.ui.custom.component.SSNHyperlinkLabel;
 import com.ssn.ui.custom.component.SSNIconPasswordField;
 import com.ssn.ui.custom.component.SSNIconTextField;
@@ -85,7 +84,6 @@ public final class SSNLoginController extends SSNBaseController {
                         } else {
                             getLoginModel().deleteRememberMe();
                         }
-                         SSNFileExplorer.selectedMedia="home";
                         new SSNHomeForm(this.getLoginForm(), response);
                         Map<String, String> preferences = null;
                         try {
@@ -110,7 +108,7 @@ public final class SSNLoginController extends SSNBaseController {
                         
                     }
                 } else {
-                    
+                    //JOptionPane.showMessageDialog(getLoginForm(), " Please enter both \n UserName and Password to login. ", "Information", JOptionPane.INFORMATION_MESSAGE);
                     SSNMessageDialogBox dialogBox = new SSNMessageDialogBox();
                     dialogBox.initDialogBoxUI(SSNDialogChoice.NOTIFICATION_DIALOG.getType(),"Information","",SSNConstants.SSN_LOGIN_FAILED_MESSAGE);
                 }
@@ -200,13 +198,12 @@ public final class SSNLoginController extends SSNBaseController {
                     SSNLoginResponse response = this.getLoginModel().processSSNLogin();
                     if (response != null && response.isSuccess()) {
                         if (this.getLoginForm().getSsnRememberMeCheckBox().isSelected()) {
-                            
+
                             getLoginModel().createRememberMe();
 
                         } else {
                             getLoginModel().deleteRememberMe();
                         }
-                        SSNFileExplorer.selectedMedia="home";
                         new SSNHomeForm(this.getLoginForm(), response);
                         Map<String, String> preferences = null;
                         try {
@@ -314,7 +311,6 @@ public final class SSNLoginController extends SSNBaseController {
                     } else {
                         getLoginModel().deleteRememberMe();
                     }
-                     SSNFileExplorer.selectedMedia="home";
                     new SSNHomeForm(this.getLoginForm(), response);
                     Map<String, String> preferences = null;
                     try {
