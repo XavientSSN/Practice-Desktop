@@ -1,0 +1,24 @@
+#JSGF V1.0;
+
+/**
+ * JSGF Grammar 
+ */
+
+grammar ssn;
+
+
+public <s> = <simple>;
+
+<simple> = --------
+           | take photo
+           | start video
+| DONE
+| SKIP
+| CANCEL
+| TAKE VIDEO
+| TAKE PICTURE
+| SNAP
+| CLICK
+| CHEESE
+| SAY CHEESE
+| --------;
